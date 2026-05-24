@@ -1,0 +1,7 @@
+{
+  "name": "agevolt-public-user-tools-marketplace",
+  "interface": {
+    "displayName": "AgeVolt Public User Tools"
+  },
+  "plugins": []
+}
