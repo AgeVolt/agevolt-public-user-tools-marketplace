@@ -25,7 +25,8 @@ novy chat len preto, ze prebehol OAuth login.
 
 ```powershell
 $codex = if ($env:CODEX_CLI_PATH) { $env:CODEX_CLI_PATH } else { (Get-ChildItem "$env:LOCALAPPDATA\OpenAI\Codex\bin" -Recurse -Filter codex.exe | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName }
-$codexHome = Join-Path ([Environment]::GetFolderPath('UserProfile')) ".codex"
+$userProfile = Split-Path (Split-Path $env:LOCALAPPDATA -Parent) -Parent
+$codexHome = Join-Path $userProfile ".codex"
 $env:CODEX_HOME = $codexHome
 $mcpUrl = "https://api1.my.agevolt.com/mcp/agevolt/mcp"
 $mcpUrlOverride = 'mcp_servers.agevolt-portal.url="' + $mcpUrl + '"'
@@ -54,7 +55,9 @@ spustal rucne ani aby sam otvaral authorization URL.
 
 Ak pouzivatel chce logout a prihlasenie pod inym uctom, najprv pouzi
 `agevolt_logout`, potom rovnakym sposobom cez shell nastav `CODEX_HOME` na
-`%USERPROFILE%\.codex` a spusti `codex -c mcp_servers.agevolt-portal.url="https://api1.my.agevolt.com/mcp/agevolt/mcp" mcp logout agevolt-portal`.
+realny Codex home odvodeny z `$env:LOCALAPPDATA`, teda nie sandboxovy
+`[Environment]::GetFolderPath('UserProfile')`, a spusti
+`codex -c mcp_servers.agevolt-portal.url="https://api1.my.agevolt.com/mcp/agevolt/mcp" mcp logout agevolt-portal`.
 Nasledne spusti rovnaky direct `codex -c ... mcp login agevolt-portal --scopes MCP.Access`
 a po dokonceni loginu zopakuj povodnu MCP poziadavku.
 
