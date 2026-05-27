@@ -17,7 +17,8 @@ spustal terminalovy MCP login prikaz.
 Ak MCP tool call vrati `Auth required` alebo transport error s textom
 `Auth required`, a shell je dostupny, spusti standardny MCP OAuth login ty a
 nechaj Codex CLI otvorit browser s authorization URL. Neotvaraj authorization
-URL druhykrat cez vlastny `Start-Process`, aby nevznikli duplicitne login taby.
+URL druhykrat cez vlastny browser open alebo `Start-Process`, aby nevznikli
+duplicitne login taby.
 V jednom user requeste spusti tento fallback najviac raz; po uspesnom login-e
 vzdy zopakuj povodny MCP tool call v tom istom chate. Nepytaj pouzivatela na
 novy chat len preto, ze prebehol OAuth login.
@@ -37,16 +38,12 @@ if ((Test-Path $lock) -and ((Get-Date) - (Get-Item $lock).LastWriteTime).TotalMi
 "$PID" | Set-Content $lock
 Remove-Item $out,$err -ErrorAction SilentlyContinue
 try {
-  $p = Start-Process -FilePath $codex -ArgumentList @('-c', $mcpUrlOverride, 'mcp', 'login', 'agevolt-portal', '--scopes', 'MCP.Access') -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden
-  $deadline = (Get-Date).AddMinutes(5)
-  while (-not $p.HasExited -and (Get-Date) -lt $deadline) {
-    Start-Sleep -Milliseconds 500
-  }
-  if (-not $p.HasExited) {
-    Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-    throw "AgeVolt MCP login did not complete before timeout"
-  }
+  & $codex -c $mcpUrlOverride mcp login agevolt-portal --scopes MCP.Access > $out 2> $err
+  $exitCode = $LASTEXITCODE
   Get-Content $out,$err -ErrorAction SilentlyContinue
+  if ($exitCode -ne 0) {
+    throw "AgeVolt MCP login failed with exit code $exitCode"
+  }
 } finally {
   Remove-Item $lock -ErrorAction SilentlyContinue
 }
@@ -56,11 +53,10 @@ Potom zopakuj povodny MCP tool call. Pouzivatela neziadaj, aby tento prikaz
 spustal rucne ani aby sam otvaral authorization URL.
 
 Ak pouzivatel chce logout a prihlasenie pod inym uctom, najprv pouzi
-`agevolt_logout`, potom spusti `codex mcp logout agevolt-portal` rovnakym
-sposobom cez shell s nastavenym `CODEX_HOME` na `%USERPROFILE%\.codex` a s
-rovnakym `-c mcp_servers.agevolt-portal.url="https://api1.my.agevolt.com/mcp/agevolt/mcp"`.
-Nasledne spusti `codex mcp login agevolt-portal --scopes MCP.Access` a po
-dokonceni loginu zopakuj povodnu MCP poziadavku.
+`agevolt_logout`, potom rovnakym sposobom cez shell nastav `CODEX_HOME` na
+`%USERPROFILE%\.codex` a spusti `codex -c mcp_servers.agevolt-portal.url="https://api1.my.agevolt.com/mcp/agevolt/mcp" mcp logout agevolt-portal`.
+Nasledne spusti rovnaky direct `codex -c ... mcp login agevolt-portal --scopes MCP.Access`
+a po dokonceni loginu zopakuj povodnu MCP poziadavku.
 
 Ak MCP tools v aktualnom chate stale nie su viditelne, povedz strucne, ze treba
 refreshnut plugin session po instalacii/deployi; novy chat spominaj iba ako
