@@ -1,0 +1,42 @@
+{
+  "name": "agevolt-portal",
+  "version": "0.1.0",
+  "description": "AgeVolt Portal plugin for signed-in user self-service workflows through the AgeVolt Portal MCP server.",
+  "author": {
+    "name": "AgeVolt",
+    "email": "zustiak@agevolt.com",
+    "url": "https://www.agevolt.com"
+  },
+  "homepage": "https://github.com/AgeVolt/agevolt-public-user-tools-marketplace",
+  "repository": "https://github.com/AgeVolt/agevolt-public-user-tools-marketplace",
+  "license": "UNLICENSED",
+  "keywords": [
+    "agevolt",
+    "portal",
+    "charging",
+    "transactions",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AgeVolt Portal",
+    "shortDescription": "Moje AgeVolt data cez MCP.",
+    "longDescription": "AgeVolt Portal plugin pre user-facing workflowy cez AgeVolt Portal MCP server. V1 podporuje read-only nacitanie ukoncenych nabijacich transakcii prihlaseneho pouzivatela.",
+    "developerName": "AgeVolt",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read"
+    ],
+    "websiteURL": "https://www.agevolt.com",
+    "brandColor": "#280046",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "defaultPrompt": [
+      "Zobraz moje nabijacie transakcie za posledny mesiac.",
+      "Ake nabijania som mal za poslednych 30 dni?",
+      "Vypis moje ukoncene charging transactions."
+    ]
+  }
+}

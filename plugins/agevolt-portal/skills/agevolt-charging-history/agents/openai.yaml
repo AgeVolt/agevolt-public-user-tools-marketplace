@@ -1,0 +1,14 @@
+interface:
+  display_name: "AgeVolt Charging History"
+  short_description: "Moje nabijacie transakcie."
+  brand_color: "#280046"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/logo.png"
+  default_prompt: "Use $agevolt-charging-history to show my charging transactions from the last month."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agevolt-portal"
+      description: "AgeVolt Portal MCP server"
+      transport: "streamable_http"
+      url: "https://api1.my.agevolt.com/mcp/agevolt/mcp"

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "agevolt-portal": {
+      "type": "http",
+      "url": "https://api1.my.agevolt.com/mcp/agevolt/mcp"
+    }
+  }
+}

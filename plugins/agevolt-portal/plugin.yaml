@@ -1,0 +1,19 @@
+id: agevolt-portal
+display_name: "AgeVolt Portal"
+status: active-mvp
+purpose: "AgeVolt Portal MCP for signed-in user self-service data workflows."
+skills:
+  - id: agevolt-charging-history
+    status: active-mvp
+kb:
+  - agevolt-portal-mcp.md
+mcp:
+  - id: agevolt-portal
+    type: http
+    url: "https://api1.my.agevolt.com/mcp/agevolt/mcp"
+rules:
+  read_only_v1: true
+  use_mcp_tools_directly: true
+  do_not_call_http_fallback_endpoints: true
+  do_not_read_or_copy_tokens: true
+  user_must_authenticate_via_mcp_oauth: true

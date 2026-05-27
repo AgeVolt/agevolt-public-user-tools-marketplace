@@ -3,5 +3,18 @@
   "interface": {
     "displayName": "AgeVolt Public User Tools"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "agevolt-portal",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agevolt-portal"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
 }
