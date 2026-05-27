@@ -24,7 +24,10 @@ novy chat len preto, ze prebehol OAuth login.
 
 ```powershell
 $codex = if ($env:CODEX_CLI_PATH) { $env:CODEX_CLI_PATH } else { (Get-ChildItem "$env:LOCALAPPDATA\OpenAI\Codex\bin" -Recurse -Filter codex.exe | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName }
-$env:CODEX_HOME = Join-Path $env:USERPROFILE ".codex"
+$codexHome = Join-Path ([Environment]::GetFolderPath('UserProfile')) ".codex"
+$env:CODEX_HOME = $codexHome
+$mcpUrl = "https://api1.my.agevolt.com/mcp/agevolt/mcp"
+$mcpUrlOverride = 'mcp_servers.agevolt-portal.url="' + $mcpUrl + '"'
 $out = Join-Path $env:TEMP "agevolt-portal-mcp-login.out.log"
 $err = Join-Path $env:TEMP "agevolt-portal-mcp-login.err.log"
 $lock = Join-Path $env:TEMP "agevolt-portal-mcp-login.lock"
@@ -34,8 +37,7 @@ if ((Test-Path $lock) -and ((Get-Date) - (Get-Item $lock).LastWriteTime).TotalMi
 "$PID" | Set-Content $lock
 Remove-Item $out,$err -ErrorAction SilentlyContinue
 try {
-  $cmd = '""' + $codex + '" mcp login agevolt-portal --scopes MCP.Access > "' + $out + '" 2> "' + $err + '""'
-  $p = Start-Process -FilePath "$env:SystemRoot\System32\cmd.exe" -ArgumentList @('/d','/s','/c',$cmd) -PassThru -WindowStyle Hidden
+  $p = Start-Process -FilePath $codex -ArgumentList @('-c', $mcpUrlOverride, 'mcp', 'login', 'agevolt-portal', '--scopes', 'MCP.Access') -RedirectStandardOutput $out -RedirectStandardError $err -PassThru -WindowStyle Hidden
   $deadline = (Get-Date).AddMinutes(5)
   while (-not $p.HasExited -and (Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 500
@@ -55,7 +57,8 @@ spustal rucne ani aby sam otvaral authorization URL.
 
 Ak pouzivatel chce logout a prihlasenie pod inym uctom, najprv pouzi
 `agevolt_logout`, potom spusti `codex mcp logout agevolt-portal` rovnakym
-sposobom cez shell s nastavenym `CODEX_HOME` na `%USERPROFILE%\.codex`.
+sposobom cez shell s nastavenym `CODEX_HOME` na `%USERPROFILE%\.codex` a s
+rovnakym `-c mcp_servers.agevolt-portal.url="https://api1.my.agevolt.com/mcp/agevolt/mcp"`.
 Nasledne spusti `codex mcp login agevolt-portal --scopes MCP.Access` a po
 dokonceni loginu zopakuj povodnu MCP poziadavku.
 

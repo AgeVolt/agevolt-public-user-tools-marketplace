@@ -1,6 +1,6 @@
 {
   "name": "agevolt-portal",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AgeVolt Portal plugin for signed-in user self-service workflows through the AgeVolt Portal MCP server.",
   "author": {
     "name": "AgeVolt",
